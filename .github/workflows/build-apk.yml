@@ -26,6 +26,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.7'
+          allow-checksums: 'a263b23da79c111ae8605e26df39a2e1a9842eb079bcec4d30ec20b441cc8eb0,a5e75118d96b4eac2100876f6af6a5ca5029cd440f87736425350fb4cf308b42,cb0da6751c2b753a16ac168bb354870ebb1e162e9083f116729cec9c781156b8'
 
       - name: Make gradlew executable
         run: chmod +x gradlew
