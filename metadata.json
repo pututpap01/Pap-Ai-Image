@@ -1,0 +1,6 @@
+{
+  "name": "Img2Img AI",
+  "description": "Generator Img2Img AI Bebas & Gratis. Ubah foto, edit gambar, dan hasilkan karya AI tanpa batas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
