@@ -12,12 +12,12 @@ plugins {
 
 android {
   namespace = "com.example"
-  compileSdk { version = release(36) { minorApiLevel = 1 } }
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "com.aistudio.img2img.studio"
     minSdk = 24
-    targetSdk = 36
+    targetSdk = 35
     versionCode = 1
     versionName = "1.0"
 
@@ -30,16 +30,17 @@ android {
       val base64KsFile = file("${rootDir}/debug.keystore.base64")
       if (!ksFile.exists() && base64KsFile.exists()) {
         runCatching {
-          val decoded = Base64.getDecoder().decode(base64KsFile.readText().trim())
+          val cleanBase64 = base64KsFile.readText().replace("\r", "").replace("\n", "").trim()
+          val decoded = Base64.getDecoder().decode(cleanBase64)
           ksFile.writeBytes(decoded)
         }
       }
       if (ksFile.exists()) {
         storeFile = ksFile
+        storePassword = "android"
+        keyAlias = "androiddebugkey"
+        keyPassword = "android"
       }
-      storePassword = "android"
-      keyAlias = "androiddebugkey"
-      keyPassword = "android"
     }
     create("release") {
       val keystorePath = System.getenv("KEYSTORE_PATH") ?: "${rootDir}/my-upload-key.jks"
@@ -69,7 +70,14 @@ android {
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       signingConfig = signingConfigs.getByName("release")
     }
-    debug { signingConfig = signingConfigs.getByName("debugConfig") }
+    debug {
+      val customDebug = signingConfigs.findByName("debugConfig")
+      if (customDebug?.storeFile?.exists() == true) {
+        signingConfig = customDebug
+      } else {
+        signingConfig = signingConfigs.getByName("debug")
+      }
+    }
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_11

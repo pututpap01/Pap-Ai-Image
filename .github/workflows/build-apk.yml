@@ -11,6 +11,8 @@ jobs:
   build:
     name: Build APK
     runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: 'true'
 
     steps:
       - name: Checkout code
@@ -28,6 +30,9 @@ jobs:
           gradle-version: '8.7'
           validate-wrappers: false
 
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
       - name: Create .env from .env.example
         run: |
           if [ -f .env.example ] && [ ! -f .env ]; then
@@ -41,7 +46,7 @@ jobs:
           fi
 
       - name: Build Debug APK
-        run: gradle assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
